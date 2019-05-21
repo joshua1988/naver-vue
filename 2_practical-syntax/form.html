@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Vue Form</title>
+    <style>
+      .form-input {
+        margin: 1rem 0;
+      }
+      .warning {
+        color: red;
+      }
+      .disabled {
+        cursor: none;
+        opacity: 0.5;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <form v-on:submit.prevent="loginUser">
+        <div class="form-input">
+          <label for="username">id: </label>
+          <input type="text" id="username" v-model="username" />
+          <p class="warning" v-if="!isUsernameValid">
+            username must be an email
+          </p>
+        </div>
+        <div class="form-input">
+          <label for="password">pw: </label>
+          <input type="password" id="password" v-model="password" />
+        </div>
+        <button type="submit" v-bind:disabled="!isFormValid">
+          login
+        </button>
+      </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+      // utils
+      function validateEmail(value) {
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(String(value).toLowerCase());
+      }
+      function validatePassword(value) {
+        return value.length >= 6;
+      }
+
+      new Vue({
+        el: '#app',
+        data: {
+          username: '',
+          password: '',
+        },
+        computed: {
+          isUsernameValid: function() {
+            if (!this.username) {
+              return true;
+            }
+            return validateEmail(this.username);
+          },
+          isFormValid: function() {
+            return (
+              validateEmail(this.username) && validatePassword(this.password)
+            );
+          },
+        },
+        methods: {
+          loginUser: function() {
+            var vm = this;
+            axios
+              .post('https://jsonplaceholder.typicode.com/users', {
+                username: this.username,
+                password: this.password,
+              })
+              .then(function(response) {
+                console.log(response);
+                vm.initForm();
+              })
+              .catch(function(error) {
+                console.log(error);
+              });
+          },
+          initForm: function() {
+            this.username = '';
+            this.password = '';
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
