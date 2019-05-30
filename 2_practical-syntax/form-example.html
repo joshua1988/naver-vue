@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Form</title>
+</head>
+<body>
+  <div id="app">
+    <!-- <p>{{ str }}</p>
+    <app-header></app-header> -->
+    <form>
+      <!-- TODO: Form 제작 -->
+      <div>
+        <label for="username">ID : </label>  
+        <input id="username" type="text" v-model="id">
+      </div>
+      <div>
+        <label for="password">PW : </label>
+        <input id="password" type="password" v-model="pw">
+      </div>
+      <button type="submit" v-on:click.prevent="loginUser">
+        login
+      </button>
+    </form>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        str: 'hello vue.js',
+        id: '',
+        pw: '',
+      },
+      methods: {
+        loginUser: function(event) {
+          // event.preventDefault();
+          // console.log(event);
+          var url = 'https://jsonplaceholder.typicode.com/users';
+          var data = {
+            id: this.id,
+            pw: this.pw
+          };
+          axios.post(url, data)
+            .then(function(response) {
+              // 데이터 생성에 성공했을 때
+              console.log(response);
+            })
+            .catch(function(error) {
+              // 데이터 생성에 실패했을 때
+              console.log(error);
+            });
+        }
+      },
+      components: {
+        // '컴포넌트 이름': 컴포넌트 내용,
+        'app-header': {
+          template: '<h1>vue form</h1>'
+        }
+      }
+    })
+  </script>
+</body>
+</html>
