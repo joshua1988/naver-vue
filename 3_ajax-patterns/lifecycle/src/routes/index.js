@@ -9,16 +9,19 @@ export default new Router({
   mode: 'history',
   routes: [
     {
+      // URL 정보
       path: '/',
-      redirect: '/news'
+      redirect: '/news',
     },
     {
+      // URL 정보
       path: '/news',
+      // URL에 해당하는 페이지 컴포넌트
       component: NewsView,
     },
     {
       path: '/jobs',
       component: JobsView,
     },
-  ]
-})
+  ],
+});
